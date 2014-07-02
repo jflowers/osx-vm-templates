@@ -4,12 +4,11 @@
       "boot_wait": "2s",
       "disk_size": 20480,
       "guest_additions_mode": "disable",
-      "guest_os_type": "MacOS109_64",
+      "guest_os_type": "MacOS",
       "hard_drive_interface": "sata",
       "iso_checksum_type": "md5",
-      "iso_checksum": "aff67f81dfbad7afda56c423473d61a6",
-      "iso_interface": "sata",
-      "iso_url": "OSX_InstallESD_10.9.3_13D65.dmg",
+      "iso_checksum": "28f6f8d3d1834e8001a81f40ad42d1aa",
+      "iso_url": "file:///Volumes/SSD/Projects/github/osx-vm-templates/out/OSX_InstallESD_10.9.4_13E28.dmg",
       "shutdown_command": "echo 'vagrant'|sudo -S shutdown -h now",
       "ssh_password": "vagrant",
       "ssh_port": 22,
@@ -21,8 +20,6 @@
       	["modifyvm", "{{.Name}}", "--boot1", "dvd"],
       	["modifyvm", "{{.Name}}", "--boot2", "disk"],
       	["modifyvm", "{{.Name}}", "--chipset", "ich9"],
-	["modifyvm", "{{.Name}}", "--cpuidset", "00000001", "000306a9", "00020800", "80000201", "178bfbff"],
-      	["modifyvm", "{{.Name}}", "--firmware", "efi"],
       	["modifyvm", "{{.Name}}", "--hpet", "on"],
       	["modifyvm", "{{.Name}}", "--keyboard", "usb"],
       	["modifyvm", "{{.Name}}", "--memory", "2048"],
@@ -44,10 +41,8 @@
       "execute_command": "chmod +x {{ .Path }}; sudo {{ .Vars }} {{ .Path }}",
       "scripts": [
         "../scripts/vagrant.sh",
-        "../scripts/vmware.sh",
         "../scripts/xcode-cli-tools.sh",
-        "../scripts/chef-omnibus.sh",
-        "../scripts/puppet.sh"
+        "../scripts/chef-omnibus.sh"
       ],
       "type": "shell"
     },

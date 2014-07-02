@@ -4,7 +4,7 @@
       "boot_wait": "2s",
       "disk_size": 20480,
       "guest_additions_mode": "disable",
-      "guest_os_type": "MacOS",
+      "guest_os_type": "MacOS109_64",
       "hard_drive_interface": "sata",
       "iso_checksum_type": "md5",
       "iso_checksum": "28f6f8d3d1834e8001a81f40ad42d1aa",
@@ -20,11 +20,14 @@
       	["modifyvm", "{{.Name}}", "--boot1", "dvd"],
       	["modifyvm", "{{.Name}}", "--boot2", "disk"],
       	["modifyvm", "{{.Name}}", "--chipset", "ich9"],
+      	["modifyvm", "{{.Name}}", "--firmware", "efi"],
       	["modifyvm", "{{.Name}}", "--hpet", "on"],
       	["modifyvm", "{{.Name}}", "--keyboard", "usb"],
       	["modifyvm", "{{.Name}}", "--memory", "2048"],
       	["modifyvm", "{{.Name}}", "--mouse", "usbtablet"],
-      	["modifyvm", "{{.Name}}", "--vram", "9"]
+      	["modifyvm", "{{.Name}}", "--vram", "9"],
+        ["storagectl", "packer-virtualbox-iso", "--add", "sata", "--name", "\"SATA Controller\"", "--controller", "IntelAHCI", "--portcount", "3", "--hostiocache", "off", "--bootable", "on"],
+        ["storageattach", "packer-virtualbox-iso", "--storagectl", "\"SATA Controller\"", "--port", "1", "--type", "dvddrive", "--medium", "../out/OSX_InstallESD_10.9.4_13E28.dmg"]
       ]
     }
   ],
@@ -53,6 +56,13 @@
         "echo \"Enabling automatic GUI login for the 'vagrant' user..\"",
         "cp /private/tmp/kcpassword /private/etc/kcpassword",
         "/usr/bin/defaults write /Library/Preferences/com.apple.loginwindow autoLoginUser vagrant"
+      ],
+      "type": "shell"
+    },
+    {
+      "execute_command": "chmod +x {{ .Path }}; sudo {{ .Vars }} {{ .Path }}",
+      "inline": [
+        "drutil list | tail -n +2 | awk '{print $2}' | awk '{ for(i = 1; i <= NF; i++) { print $i; } }' | while read i; do echo drutil eject -drive $i; done"
       ],
       "type": "shell"
     }
